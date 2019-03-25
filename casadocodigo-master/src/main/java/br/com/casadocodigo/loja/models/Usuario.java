@@ -22,6 +22,8 @@ public class Usuario implements UserDetails {
 	@Id
 	private String email;
 	private String senha;
+	private String senhaConfirma;
+
 	private String nome;
 
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -60,6 +62,14 @@ public class Usuario implements UserDetails {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+	
+	public String getSenhaConfirma() {
+		return senhaConfirma;
+	}
+
+	public void setSenhaConfirma(String senhaConfirma) {
+		this.senhaConfirma = senhaConfirma;
 	}
 
 	@Override
