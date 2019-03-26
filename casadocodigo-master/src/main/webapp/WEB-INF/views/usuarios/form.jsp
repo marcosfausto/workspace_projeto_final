@@ -7,6 +7,7 @@
 
 <c:url value="/" var="contextPath" />
 
+
 <tags:pageTemplate titulo="Pedidos">
 
 

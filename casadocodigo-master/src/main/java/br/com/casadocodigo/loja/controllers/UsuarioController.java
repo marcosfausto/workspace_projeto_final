@@ -5,10 +5,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,18 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.casadocodigo.loja.dao.ProdutoDAO;
 import br.com.casadocodigo.loja.dao.UsuarioDAO;
-import br.com.casadocodigo.loja.infra.FileSaver;
-import br.com.casadocodigo.loja.models.Produto;
 import br.com.casadocodigo.loja.models.Usuario;
-import br.com.casadocodigo.loja.validation.ProdutoValidation;
 import br.com.casadocodigo.loja.validation.UsuarioValidation;
 
 
 @Controller
 @RequestMapping("/usuarios")
-public class UsuarioController {
+public class UsuarioController  {
 	
 	@Autowired
 	private UsuarioDAO dao;
@@ -55,20 +51,28 @@ public class UsuarioController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ModelAndView gravar(MultipartFile sumario, @Valid Usuario usuario, BindingResult result, 
-				RedirectAttributes redirectAttributes){
+	public ModelAndView gravar(@Valid Usuario usuario, BindingResult result, 
+				RedirectAttributes redirectAttributes, Errors Errors){
 		
 		if(result.hasErrors()) {
 			return form(usuario);
 		}
 		
-/*		String path = fileSaver.write("arquivos-sumario", sumario);
-		usuario.setSumarioPath(path);*/
-		
+	
 	    BCryptPasswordEncoder passwordEncoder= new BCryptPasswordEncoder();
         String encodedPassword  = passwordEncoder.encode(usuario.getSenha());
         usuario.setSenha(encodedPassword);
         usuario.setSenhaConfirma(encodedPassword);
+        
+        boolean checkEmail = dao.checkEmail(usuario.getEmail());
+                
+        if(checkEmail == true) {
+        	
+        	Errors.rejectValue("email", "verify.email");
+        	
+        	return form(usuario);
+			
+		}
         
 		dao.gravar(usuario);
 		

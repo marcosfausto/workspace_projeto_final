@@ -32,6 +32,19 @@ public class UsuarioDAO implements UserDetailsService{
 		return usuarios.get(0);
 	}
 	
+	public boolean checkEmail(String email) {
+		    String query = ("select count(email) from Usuario u where email = :email");
+			Long count = (Long) manager.createQuery(query).setParameter("email", email).getSingleResult();
+			
+			if(count > 0) {
+				return true;
+			}else {
+				return false;
+			}
+			
+	}
+	
+	
 
 	public void gravar(Usuario usuario) {
 		manager.persist(usuario);
