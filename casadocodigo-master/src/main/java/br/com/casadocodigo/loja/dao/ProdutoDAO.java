@@ -48,4 +48,21 @@ public class ProdutoDAO {
 	    query.setParameter("tipoPreco", tipoPreco);
 	    return query.getSingleResult();
 	}
+	
+	public Long contaProdutos() {
+	    String query = ("select count(id) from Produto p");
+		Long count = (Long) manager.createQuery(query).getSingleResult();
+		
+		return count;
+		
+	}
+	
+	public Long contaProdutos(Calendar dataLancamento) {
+	    String query = ("select count(id) from Produto p where p.dataLancamento >= :dataLancamento");
+	    		
+		Long count = (Long) manager.createQuery(query).setParameter("dataLancamento", dataLancamento).getSingleResult();
+		
+		return count;
+		
+	}
 }

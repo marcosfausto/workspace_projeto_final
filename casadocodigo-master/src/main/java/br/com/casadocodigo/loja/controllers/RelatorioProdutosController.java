@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.casadocodigo.loja.dao.ProdutoDAO;
 import br.com.casadocodigo.loja.models.Produto;
+import br.com.casadocodigo.loja.models.Relatorio;
 
 @Controller
 @RequestMapping("/relatorio-produtos")
@@ -35,18 +36,35 @@ public class RelatorioProdutosController {
 	
 	@RequestMapping(method=RequestMethod.GET)
 	@ResponseBody
-	public List<Produto> detalheJson(@RequestParam(value="data", required=false) String dataLancamento) throws ParseException{
+	public Relatorio detalheJson(@RequestParam(value="data", required=false) String dataLancamento) throws ParseException{
+		
+		Relatorio relatorio = new Relatorio() ;
+				
+		Date dateAtual = Calendar.getInstance().getTime();
+
+		relatorio.setDataGeracao(dateAtual);
+						
+		
 		
 		if(dataLancamento!=null) {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = format.parse(dataLancamento);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
-	    return dao.findPorData(cal);
+			           
+	        relatorio.setProdutos(dao.findPorData(cal));
+	        relatorio.setQuantidade(dao.contaProdutos(cal));
+
+	        
+	           
+		}else {
+	          relatorio.setQuantidade(dao.contaProdutos());
+			  relatorio.setProdutos(dao.listar());
 		}
-		else {
-			return dao.listar();
-		}
-	
+		
+		return relatorio;
+		
 	}
+	
+	
 }

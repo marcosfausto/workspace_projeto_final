@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -19,7 +21,9 @@ public class Usuario implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int id;
+	
 	private String email;
 	private String senha;
 	private String senhaConfirma;
@@ -31,6 +35,11 @@ public class Usuario implements UserDetails {
 		joinColumns = @JoinColumn(name = "email"), 
 		inverseJoinColumns = @JoinColumn(name = "role_nome"))
 	private List<Role> roles = new ArrayList<>();
+
+	@Override
+	public String toString() {
+		return roles +"";
+	}
 
 	public String getEmail() {
 		return email;
@@ -70,6 +79,14 @@ public class Usuario implements UserDetails {
 
 	public void setSenhaConfirma(String senhaConfirma) {
 		this.senhaConfirma = senhaConfirma;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	@Override

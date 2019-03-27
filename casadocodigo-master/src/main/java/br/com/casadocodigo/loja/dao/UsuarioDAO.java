@@ -32,6 +32,13 @@ public class UsuarioDAO implements UserDetailsService{
 		return usuarios.get(0);
 	}
 	
+	public Usuario getUserById(Integer id) {
+		return manager.createQuery("select u from Usuario u where id = :id", Usuario.class)
+				.setParameter("id", id)
+				.getSingleResult();
+		
+	}
+	
 	public boolean checkEmail(String email) {
 		    String query = ("select count(email) from Usuario u where email = :email");
 			Long count = (Long) manager.createQuery(query).setParameter("email", email).getSingleResult();
@@ -54,5 +61,14 @@ public class UsuarioDAO implements UserDetailsService{
 	public List<Usuario> listar() {
 		return manager.createQuery("select u from Usuario u", Usuario.class)
 				.getResultList();
+	}
+
+	public void atualizaRoles(Usuario usuarioSelecionado) {
+		
+		manager.createNativeQuery("insert into usuario_role(email,role_nome) values (?,?)")
+		.setParameter(1, usuarioSelecionado.getId())
+		.setParameter(2, usuarioSelecionado.getRoles())
+		.executeUpdate();
+		
 	}
 }
