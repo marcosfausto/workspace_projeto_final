@@ -28,7 +28,7 @@
 					<td>${usuario.nome }</td>
 					<td>${usuario.email }</td>
 					<td>${usuario.roles }</td>
-					<td><a href="${s:mvcUrl('UC#role').arg(0, usuario.id).build() }">${usuario.id }</a></td>					
+					<td><a href="${s:mvcUrl('UC#role').arg(0, usuario.id).build() }">+</a></td>					
 				</tr>
 			</c:forEach>
 		</table>

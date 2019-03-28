@@ -1,6 +1,6 @@
 package br.com.casadocodigo.loja.controllers;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.List;
 
 import javax.validation.Valid;
@@ -15,13 +15,11 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.casadocodigo.loja.dao.RoleDAO;
 import br.com.casadocodigo.loja.dao.UsuarioDAO;
-import br.com.casadocodigo.loja.models.Produto;
 import br.com.casadocodigo.loja.models.Role;
 import br.com.casadocodigo.loja.models.Usuario;
 import br.com.casadocodigo.loja.validation.UsuarioValidation;
@@ -82,21 +80,18 @@ public class UsuarioController  {
 	
 	
 	
-    @RequestMapping(value="lista")
-    public ModelAndView atualizarRoles(Usuario usuario){
-        ModelAndView modelAndView = new ModelAndView("usuarios/lista");
+    @RequestMapping("/lista")
+    public ModelAndView atualizarRoles(Usuario usuario, RedirectAttributes redirectAttributes){
 
         List<Role> rolesSelecionadas = usuario.getRoles();
         Usuario usuarioSelecionado = usuarioDao.getUserById(usuario.getId());
         usuarioSelecionado.setRoles(rolesSelecionadas);
 
-        System.out.println("usuario com novas roles selecionadas: " + usuario.getRoles().toString());
-
         usuarioDao.atualizaRoles(usuarioSelecionado);
-
-        List<Usuario> usuarios = usuarioDao.listar();
-        modelAndView.addObject("usuarios", usuarios );
-        return modelAndView;
+        
+        redirectAttributes.addFlashAttribute("sucesso", "Permissões alteradas com sucesso!");
+        
+		return new ModelAndView("redirect:/usuarios");
     }
 	
 	@RequestMapping(method=RequestMethod.POST)

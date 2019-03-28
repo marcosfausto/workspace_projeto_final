@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.casadocodigo.loja.models.Produto;
+import br.com.casadocodigo.loja.models.Role;
 import br.com.casadocodigo.loja.models.Usuario;
 
 @Repository
@@ -64,11 +65,16 @@ public class UsuarioDAO implements UserDetailsService{
 	}
 
 	public void atualizaRoles(Usuario usuarioSelecionado) {
+		List<Role> roles = usuarioSelecionado.getRoles();
 		
-		manager.createNativeQuery("insert into usuario_role(email,role_nome) values (?,?)")
-		.setParameter(1, usuarioSelecionado.getId())
-		.setParameter(2, usuarioSelecionado.getRoles())
-		.executeUpdate();
+		for (Role role : roles) {
+			
+			manager.createNativeQuery("insert into usuario_role(email,role_nome) values (?,?)")
+			.setParameter(1, usuarioSelecionado.getId())
+			.setParameter(2, role)
+			.executeUpdate();
+		}
+
 		
 	}
 }
